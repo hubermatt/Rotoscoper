@@ -22,22 +22,60 @@
 # This original script was created by Matthew Huber on 09/25/24.
 
 from PIL import Image
+import os
+import ffmpeg
 
-starting_frame_number = 197                                                    # Screenshot number to start at (these numbers get attached to photo names)
-final_frame_number = 198                                                     # Screenshot number to end at
-downscale_factor = 1                                                           # Set this to 1 if you do not want to rescale your image
+def extract_frames(video_path,output_folder):
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+    
+    output_pattern = os.path.join(output_folder, "frame_%d.png")
+
+    try:
+        (
+            ffmpeg
+            .input(video_path)
+            .output(output_pattern)
+            .run(overwrite_output=True)
+        )
+        print(f"Successfully extracted frames to: {output_folder}")
+    except ffmpeg.Error as e:
+        print(f"Error during frame extraction: {e.stderr.decode('utf8')}")
+    
+def count_frames(output_folder):
+    files = os.listdir(output_folder)
+
+    image_extension = ('.png')
+    frame_count = 0
+    for f in files:
+        if f.lower().endswith(image_extension):
+            frame_count += 1
+    return frame_count
 
 
-total_frame_count = final_frame_number - starting_frame_number                # This is the total amount of frames you are converting.
+#############################################################################
+######################## APPLY FILTER TO EACH FRAME #########################
+#############################################################################
+input_video = "C:/Users/mhube/Desktop/pics/gooby.mp4"
+output_directory = "C:/Users/mhube/Desktop/frames"
 
-for x in range(starting_frame_number, final_frame_number):
-    current_image = Image.open(f"Screenshot ({starting_frame_number}).png")             # Change the name according to the Screenshot names
+extract_frames(input_video,output_directory)
+frame_count = count_frames(output_directory)
+
+starting_frame_number = 1                                                 # Screenshot number to start at (these numbers get attached to photo names)                                                  # Screenshot number to end at
+downscale_factor = 6                                                      # Set this to 1 if you do not want to rescale your image
+
+
+
+for x in range(starting_frame_number, frame_count):
+    full_open_path = os.path.join(output_directory,f'frame_{starting_frame_number}.png')
+    current_image = Image.open(full_open_path)             # Change the name according to the Screenshot names
     current_image = current_image.convert("RGBA")
 
     width = current_image.width
     height = current_image.height
 
-    current_image = current_image.resize((int(width/downscale_factor), int(height/downscale_factor)))      # Un-comment this if you want to resize your image before conversion.
+    current_image = current_image.resize((int(width/downscale_factor), int(height/downscale_factor)))
 
     image_pixels = current_image.load()
 
@@ -57,6 +95,9 @@ for x in range(starting_frame_number, final_frame_number):
                 image_pixels[x, y] = (0, 0, 0, 0)
 
 
-    current_image.show()                                                     # Un-comment this if you want to open each image as it is processed.
-    current_image.save(f'newpic{starting_frame_number}.png')
+#    current_image.show()                                                     # Un-comment this if you want to open each image as it is processed.
+    full_path = os.path.join(output_directory, f'newframe{starting_frame_number}.png')
+    current_image.save(full_path)
     starting_frame_number +=1
+
+    
