@@ -56,7 +56,7 @@ def count_frames(output_folder):
 #############################################################################
 ######################## APPLY FILTER TO EACH FRAME #########################
 #############################################################################
-input_video = "C:/Users/mhube/Desktop/pics/gooby.mp4"
+input_video = "C:/Users/mhube/Desktop/pics/scare2.mp4"
 output_directory = "C:/Users/mhube/Desktop/frames"
 
 extract_frames(input_video,output_directory)
@@ -85,10 +85,10 @@ for x in range(starting_frame_number, frame_count):
 
             image_pixels[x, y] = (r, g, b, a)
 
-            #if (r > 200 ):                                                     # Adjust your thresholds and values accordingly to cut out the right colors
-            #    image_pixels[x, y] = (255, 255, 255, 100)
-            if (r > 69):
-                image_pixels[x, y] = (50, 120, 140, 255)
+            if (r > 100 ):                                                     # Adjust your thresholds and values accordingly to cut out the right colors
+                image_pixels[x, y] = (200, 200, 220, 255)
+            elif (r > 50):
+                image_pixels[x, y] = (120, 120, 120, 255)
             elif (b < 25):
                 image_pixels[x, y] = (200, 80, 80, 255)
             else:
