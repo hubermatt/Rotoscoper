@@ -56,7 +56,7 @@ def count_frames(output_folder):
 #############################################################################
 ######################## APPLY FILTER TO EACH FRAME #########################
 #############################################################################
-input_video = "C:/Users/mhube/Desktop/pics/scare2.mp4"
+input_video = "C:/Users/mhube/Desktop/pics/check4.mp4"
 output_directory = "C:/Users/mhube/Desktop/frames"
 
 extract_frames(input_video,output_directory)
